@@ -9,9 +9,7 @@ on:
 env:
   IS_ACTIONS_DOC: "false"
   IS_MD_FILE: "false"
-defaults:
-  run:
-    shell: bash
+
 jobs:
   test:
     name: Test
@@ -40,6 +38,12 @@ jobs:
         run: |
           chmod +x ci/setvars.sh
           ci/setvars.sh
+
+      - name: "Prepare Windows build environment"
+        env:
+          VCPKGRS_DYNAMIC: 1
+        run: echo "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
+        if: runner.os == 'Windows'
 
       - name: Cache Cargo registry
         uses: actions/cache@v1
